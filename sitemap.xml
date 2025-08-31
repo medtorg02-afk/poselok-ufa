@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'></urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://poselok-ufa.ru/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+
+    <!-- Дома: 123 м² -->
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/123/cover.jpg</image:loc>
+      <image:title>Купить дом 123 м² в посёлке Карповский — коттедж бизнес-класса Уфа</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/123/01.jpg</image:loc>
+      <image:title>Дом 123 м², фасад и архитектура ИДМ-дом — Карповский Уфа</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/123/02.jpg</image:loc>
+      <image:title>Коттедж 123 м² в посёлке Карповский, интерьер и планировка</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/123/03.jpg</image:loc>
+      <image:title>Загородный дом 123 м² возле Фёдоровки, посёлок Карповский</image:title>
+    </image:image>
+
+    <!-- Дома: 135 м² -->
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/135/cover.jpg</image:loc>
+      <image:title>Купить коттедж 135 м², посёлок Карповский, Уфа</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/135/01.jpg</image:loc>
+      <image:title>Дом 135 м² в коттеджном посёлке Карповский — фасад</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/135/02.jpg</image:loc>
+      <image:title>Коттедж 135 м² возле города Уфа — посёлок бизнес-класса Карповский</image:title>
+    </image:image>
+
+    <!-- Дома: 158,3 м² -->
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/158/cover.jpg</image:loc>
+      <image:title>Купить дом 158 м² в Уфе — посёлок Карповский</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/158/01.jpg</image:loc>
+      <image:title>Фасад коттеджа 158 м², посёлок Карповский, Самохваловка</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://poselok-ufa.ru/assets/houses/158/02.jpg</image:loc>
+      <image:title>Загородный коттедж 158 м² возле Зубово — посёлок Карповский</image:title>
+    </image:image>
+
+    <!-- Галерея «О посёлке» -->
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/01.jpg</image:loc></image:image>
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/02.jpg</image:loc></image:image>
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/03.jpg</image:loc></image:image>
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/04.jpg</image:loc></image:image>
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/05.jpg</image:loc></image:image>
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/06.jpg</image:loc></image:image>
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/07.jpg</image:loc></image:image>
+    <image:image><image:loc>https://poselok-ufa.ru/assets/settlement/08.jpg</image:loc></image:image>
+  </url>
+</urlset>
