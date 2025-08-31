@@ -327,7 +327,6 @@ function Houses({ items }) {
             </button>
             <div className="p-5 flex-1 flex flex-col">
               <h3 className="font-semibold text-lg" style={{ color: BRAND.dark }}>{h.title}</h3>
-              <p className="text-slate-600 text-sm mt-1">Готовность: {h.ready}</p>
               <div className="mt-4 text-2xl font-bold" style={{ color: BRAND.dark }}>{h.priceText}</div>
               {(h.gallery || []).length > 0 && (
                 <div className="mt-4 grid grid-cols-3 gap-2">
