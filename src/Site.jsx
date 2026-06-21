@@ -20,7 +20,7 @@ const CONTACTS = {
   ok: "https://ok.ru/profile/910218378194",
   rutube: "https://rutube.ru/channel/66111193/",
   youtube: "https://youtube.com/channel/UCScN0eQ6cxJt6ONAsJFCbpA?si=RWMETkhsaOhY5Fuo",
-  max: "https://max.ru/join/iWAHaijePX63hho9aVZOtLQWHmEh5SJafFxAPzS5AvY",
+  max: "https://max.ru/u/f9LHodD0cOJ8Pbl4IMCG_ld1035vmZwKVR3SO4GqVOYKEtLzxnZraIJD8nY",
   whatsapp_group: "https://chat.whatsapp.com/BHuELfIxme2J2tut4O2kOF",
 };
 
