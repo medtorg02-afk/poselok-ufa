@@ -745,7 +745,7 @@ function SiteMap() {
   return (
     <Section id="site-map" title="Карта посёлка Карповский">
       <p className="text-slate-600 text-sm mb-4">Нажмите на участок, чтобы увидеть информацию о доме.</p>
-      <div className="relative w-full rounded-xl overflow-hidden" style={{ aspectRatio: "615/870" }}>
+      <div className="relative rounded-xl overflow-hidden mx-auto" style={{ aspectRatio: "615/870", maxWidth: "370px" }}>
         <img
           src="/assets/map/genplan.jpg"
           alt="Генплан КП Карповский"
