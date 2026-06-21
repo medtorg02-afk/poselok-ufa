@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+﻿import { useMemo, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   MapPin, Phone, Mail, Building2, Hammer, ShieldCheck,
@@ -123,6 +123,7 @@ export default function Site() {
       <HowToGet />
       <FeaturesBlock />
       <Houses items={houses} />
+      <SiteMap />
       <HowItWorks />
       <Partners />
       <MediaCTA />
@@ -630,6 +631,117 @@ function MediaCTA() {
           </div>
         </div>
       </div>
+    </Section>
+  );
+}
+
+/* ====== КАРТА ПОСЁЛКА ====== */
+const PLOTS = {
+  1:  { status: "empty",     area: null, price: null },
+  2:  { status: "available", area: 122,  price: 11700000 },
+  3:  { status: "sold",      area: 123,  price: null },
+  4:  { status: "available", area: 123,  price: 11700000 },
+  5:  { status: "available", area: 123,  price: 11700000 },
+  6:  { status: "sold",      area: 123,  price: null },
+  7:  { status: "available", area: 123,  price: 11700000 },
+  8:  { status: "available", area: 123,  price: 11700000 },
+  9:  { status: "sold",      area: 123,  price: null },
+  10: { status: "available", area: 123,  price: 11700000 },
+  11: { status: "available", area: 123,  price: 11700000 },
+  12: { status: "available", area: 158,  price: 19500000, note: "С гаражом" },
+  13: { status: "sold",      area: null, price: null },
+  14: { status: "sold",      area: 158,  price: null },
+  15: { status: "available", area: 158,  price: 13100000 },
+  16: { status: "available", area: 142,  price: 12400000, note: "Акция" },
+  17: { status: "available", area: 142,  price: 12400000, note: "Акция" },
+  18: { status: "other",     area: null, price: null },
+  19: { status: "other",     area: null, price: null },
+  20: { status: "other",     area: null, price: null },
+  21: { status: "other",     area: null, price: null },
+  22: { status: "available", area: 123,  price: 13300000 },
+  23: { status: "other",     area: null, price: null },
+};
+const ROW_TOP = [1,2,3,4,5,6,7,8,9,10,11,12];
+const ROW_BOT = [23,22,21,20,19,18,17,16,15,14,13];
+const PLOT_STATUS_COLORS = {
+  available: { bg: "#FF5E17", color: "#fff" },
+  sold:      { bg: "#9ca3af", color: "#fff" },
+  empty:     { bg: "#fef3c7", color: "#262216" },
+  other:     { bg: "#f1f5f9", color: "#94a3b8" },
+};
+
+function SiteMap() {
+  const [active, setActive] = useState(null);
+
+  function PlotBox({ n }) {
+    const p = PLOTS[n];
+    const { bg, color } = PLOT_STATUS_COLORS[p.status];
+    const isSel = active === n;
+    return (
+      <button
+        onClick={() => setActive(active === n ? null : n)}
+        className="rounded-lg flex flex-col items-center justify-center transition-transform hover:scale-105 shrink-0"
+        style={{
+          backgroundColor: bg, color, width: 56, height: 66,
+          border: isSel ? "3px solid #262216" : "2px solid rgba(0,0,0,0.1)",
+          boxShadow: isSel ? "0 0 0 3px rgba(255,94,23,0.35)" : "0 1px 3px rgba(0,0,0,0.1)",
+        }}
+      >
+        <span style={{ fontWeight: 700, fontSize: 15 }}>{n}</span>
+        {p.area && <span style={{ fontSize: 9, opacity: 0.9 }}>{p.area} м²</span>}
+        {p.note && <span style={{ fontSize: 8, fontWeight: 700, lineHeight: 1.1 }}>{p.note}</span>}
+      </button>
+    );
+  }
+
+  const ap = active != null ? PLOTS[active] : null;
+  return (
+    <Section id="site-map" title="Карта посёлка Карповский">
+      <p className="text-slate-600 text-sm mb-5">Нажмите на участок, чтобы увидеть информацию о доме.</p>
+      <div className="overflow-x-auto pb-2">
+        <div style={{ minWidth: 740 }}>
+          <div className="flex gap-1.5 items-end">
+            <div className="text-xs text-slate-400 w-16 shrink-0 text-right pr-2 leading-tight">1–12</div>
+            {ROW_TOP.map(n => <PlotBox key={n} n={n} />)}
+          </div>
+          <div className="flex items-center gap-1.5 my-2">
+            <div className="w-16 shrink-0" />
+            <div className="flex-1 text-center text-xs font-semibold py-1.5 rounded tracking-widest" style={{ background: "#cbd5e1", color: "#475569" }}>— УЛИЦА —</div>
+          </div>
+          <div className="flex gap-1.5 items-start">
+            <div className="text-xs text-slate-400 w-16 shrink-0 text-right pr-2 leading-tight">23–13</div>
+            {ROW_BOT.map(n => <PlotBox key={n} n={n} />)}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-5 mt-4 text-xs text-slate-600">
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded" style={{ background: "#FF5E17" }} /> В продаже</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-400" /> Продан</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-amber-100 border border-amber-300" /> Уточняется</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-slate-100 border border-slate-300" /> Не в продаже</span>
+      </div>
+
+      {active != null && ap && (
+        <div className="mt-5 rounded-2xl border p-5 relative" style={{
+          borderColor: ap.status === "available" ? "#FF5E17" : "#e2e8f0",
+          backgroundColor: ap.status === "available" ? "#fff7f3" : "#f8fafc",
+        }}>
+          <button onClick={() => setActive(null)} className="absolute top-3 right-3 text-slate-400 hover:text-slate-600"><X className="w-4 h-4" /></button>
+          <div className="font-bold text-base mb-1" style={{ color: "#262216" }}>Участок №{active}</div>
+          {ap.status === "available" && (
+            <div>
+              {ap.area && <div className="text-slate-700 text-sm">Дом {ap.area} м²</div>}
+              {ap.note && <div className="text-emerald-600 text-sm font-semibold">{ap.note}</div>}
+              {ap.price && <div className="text-xl font-bold mt-1" style={{ color: "#FF5E17" }}>{ap.price.toLocaleString("ru-RU")} ₽</div>}
+              <a href={CONTACTS.max} className="mt-3 inline-block rounded-xl px-4 py-2 text-sm font-semibold" style={{ backgroundColor: "#FF5E17", color: "#fff" }}>Написать в MAX</a>
+            </div>
+          )}
+          {ap.status === "sold" && <div className="text-slate-500 text-sm">Участок продан</div>}
+          {ap.status === "empty" && <div className="text-slate-500 text-sm">Участок без дома — уточняйте условия: <a href={CONTACTS.max} style={{ color: "#FF5E17" }}>написать в MAX</a></div>}
+          {ap.status === "other" && <div className="text-slate-500 text-sm">Участок не в продаже</div>}
+        </div>
+      )}
     </Section>
   );
 }
