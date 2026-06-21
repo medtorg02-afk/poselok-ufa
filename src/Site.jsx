@@ -670,93 +670,117 @@ const PLOT_STATUS_COLORS = {
   other:     { bg: "#f1f5f9", color: "#94a3b8" },
 };
 
-// позиции маркеров — по пикселям PNG 615x430
-// y=174px/430=40.5% (ряд1), y=232px/430=54% (ряд2)
-// x: ряд1 от 140px(22.8%) шаг 40px; ряд2 от 106px(17.2%) шаг 43px
-const PLOT_POSITIONS = {
-  1:  { x: 22.8, y: 40.5 },
-  2:  { x: 29.3, y: 40.5 },
-  3:  { x: 35.8, y: 40.5 },
-  4:  { x: 42.3, y: 40.5 },
-  5:  { x: 48.8, y: 40.5 },
-  6:  { x: 55.3, y: 40.5 },
-  7:  { x: 61.8, y: 40.5 },
-  8:  { x: 68.3, y: 40.5 },
-  9:  { x: 74.8, y: 40.5 },
-  10: { x: 81.3, y: 40.5 },
-  11: { x: 87.8, y: 40.5 },
-  12: { x: 94.3, y: 40.5 },
-  23: { x: 17.2, y: 54.0 },
-  22: { x: 24.3, y: 54.0 },
-  21: { x: 31.3, y: 54.0 },
-  20: { x: 38.4, y: 54.0 },
-  19: { x: 45.4, y: 54.0 },
-  18: { x: 52.5, y: 54.0 },
-  17: { x: 59.5, y: 54.0 },
-  16: { x: 66.6, y: 54.0 },
-  15: { x: 73.6, y: 54.0 },
-  14: { x: 80.7, y: 54.0 },
-  13: { x: 87.8, y: 54.0 },
-};
-
-function PlotMarker({ n, active, setActive }) {
-  const p = PLOTS[n];
-  const pos = PLOT_POSITIONS[n];
-  if (!pos) return null;
-  const { bg, color } = PLOT_STATUS_COLORS[p.status];
-  const isSel = active === n;
-  return (
-    <button
-      onClick={() => setActive(active === n ? null : n)}
-      title={`Участок ${n}`}
-      style={{
-        position: "absolute",
-        left: `${pos.x}%`,
-        top: `${pos.y}%`,
-        transform: `translate(-50%, -50%) scale(${isSel ? 1.25 : 1})`,
-        width: 26,
-        height: 26,
-        borderRadius: "50%",
-        backgroundColor: bg,
-        color,
-        border: isSel ? "2.5px solid #262216" : "2px solid rgba(255,255,255,0.85)",
-        boxShadow: isSel ? "0 0 0 3px rgba(255,94,23,0.45)" : "0 2px 6px rgba(0,0,0,0.35)",
-        fontWeight: 700,
-        fontSize: 10,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
-        zIndex: 10,
-        transition: "transform 0.15s, box-shadow 0.15s",
-        lineHeight: 1,
-      }}
-    >
-      {n}
-    </button>
-  );
-}
-
 function SiteMap() {
   const [active, setActive] = useState(null);
   const ap = active != null ? PLOTS[active] : null;
-  const ALL_PLOTS = [...ROW_TOP, ...ROW_BOT];
+
+  // SVG viewport
+  const VW = 900, VH = 400;
+  const L = 90, R = 90;                     // левый/правый блок
+  const ZW = VW - L - R;                    // ширина зоны участков (720px)
+  const ROAD_H = 64;                        // высота дороги сверху
+  const ROW1_Y = ROAD_H + 6, ROW_H = 92;   // ряд 1
+  const INNER_H = 38;                       // внутренняя дорожка
+  const ROW2_Y = ROW1_Y + ROW_H + INNER_H; // ряд 2
+
+  // размеры участков
+  const R1W = (ZW - 11 * 3) / 12;          // ~56px
+  const R2W = (ZW - 10 * 3) / 11;          // ~61px
+  const r1x = (i) => L + i * (R1W + 3);
+  const r2x = (i) => L + i * (R2W + 3);
+
+  const fmtP = (p) => (p / 1000000).toFixed(1) + "M ₽";
 
   return (
     <Section id="site-map" title="Карта посёлка Карповский">
       <p className="text-slate-600 text-sm mb-4">Нажмите на участок, чтобы увидеть информацию о доме.</p>
-      <div className="relative w-full rounded-xl overflow-hidden" style={{ aspectRatio: "615/430" }}>
-        <img
-          src="/assets/map/genplan.jpg"
-          alt="Генплан КП Карповский"
-          className="w-full h-full object-cover"
-          loading="lazy"
-          draggable={false}
-        />
-        {ALL_PLOTS.map(n => (
-          <PlotMarker key={n} n={n} active={active} setActive={setActive} />
-        ))}
-      </div>
+
+      <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full rounded-2xl" style={{ display: "block" }}>
+        {/* зелёный фон */}
+        <rect width={VW} height={VH} fill="#4a7a55" rx={12} />
+
+        {/* деревья сверху */}
+        <rect x={0} y={0} width={VW} height={22} fill="#3a6645" rx={12} />
+
+        {/* улица */}
+        <rect x={0} y={22} width={VW} height={ROAD_H - 22} fill="#5a6470" />
+        <text x={VW / 2} y={50} textAnchor="middle" fill="#c8d4e0" fontSize={12} fontWeight="600" letterSpacing="3">УЛ. ЕЛИЗАВЕТЫ ГЛИНКИ</text>
+
+        {/* фон зоны участков */}
+        <rect x={L} y={ROW1_Y - 2} width={ZW} height={ROW_H * 2 + INNER_H + 4} fill="#d8ccb8" rx={4} />
+
+        {/* внутренняя дорожка */}
+        <rect x={L} y={ROW1_Y + ROW_H} width={ZW} height={INNER_H} fill="#9a9590" />
+
+        {/* === ЛЕВЫЙ БЛОК === */}
+        <rect x={0} y={ROAD_H} width={L} height={VH - ROAD_H} fill="#3a6645" />
+        {/* Основной въезд */}
+        <rect x={4} y={ROAD_H + 4} width={L - 8} height={52} fill="#c0b090" rx={3} />
+        <text x={L/2} y={ROAD_H + 22} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ОСНОВНОЙ</text>
+        <text x={L/2} y={ROAD_H + 33} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ВЪЕЗД</text>
+        {/* Коммерция */}
+        <rect x={4} y={ROAD_H + 62} width={L - 8} height={54} fill="#d4a84a" rx={3} stroke="#b8902a" strokeWidth={1} />
+        <text x={L/2} y={ROAD_H + 83} textAnchor="middle" fill="#4a3000" fontSize={8.5} fontWeight="700">КОМ-</text>
+        <text x={L/2} y={ROAD_H + 95} textAnchor="middle" fill="#4a3000" fontSize={8.5} fontWeight="700">МЕРЦИЯ</text>
+        {/* Компас */}
+        <circle cx={L/2} cy={ROW2_Y + ROW_H/2} r={24} fill="none" stroke="#78a070" strokeWidth={1.5} />
+        <text x={L/2} y={ROW2_Y + ROW_H/2 - 10} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">С</text>
+        <text x={L/2} y={ROW2_Y + ROW_H/2 + 18} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">Ю</text>
+        <text x={L/2 - 18} y={ROW2_Y + ROW_H/2 + 4} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">З</text>
+        <text x={L/2 + 18} y={ROW2_Y + ROW_H/2 + 4} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">В</text>
+
+        {/* === ПРАВЫЙ БЛОК === */}
+        <rect x={VW - R} y={ROAD_H} width={R} height={VH - ROAD_H} fill="#3a6645" />
+        {/* Второй въезд */}
+        <rect x={VW - R + 4} y={ROAD_H + 4} width={R - 8} height={42} fill="#c0b090" rx={3} />
+        <text x={VW - R/2} y={ROAD_H + 20} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ВТОРОЙ</text>
+        <text x={VW - R/2} y={ROAD_H + 32} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ВЪЕЗД</text>
+        {/* Детский сад */}
+        <rect x={VW - R + 4} y={ROAD_H + 54} width={R - 8} height={66} fill="#e8dbc0" rx={3} stroke="#c4a878" strokeWidth={1} />
+        <text x={VW - R/2} y={ROAD_H + 74} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">ДЕТ-</text>
+        <text x={VW - R/2} y={ROAD_H + 85} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">СКИЙ</text>
+        <text x={VW - R/2} y={ROAD_H + 96} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">САД</text>
+
+        {/* === РЯД 1 (участки 1-12) === */}
+        {ROW_TOP.map((n, i) => {
+          const p = PLOTS[n];
+          const { bg, color } = PLOT_STATUS_COLORS[p.status];
+          const x = r1x(i);
+          const isSel = active === n;
+          return (
+            <g key={n} onClick={() => setActive(active === n ? null : n)} style={{ cursor: "pointer" }}>
+              <rect x={x} y={ROW1_Y} width={R1W} height={ROW_H} fill={bg} rx={4}
+                stroke={isSel ? "#262216" : "rgba(0,0,0,0.18)"} strokeWidth={isSel ? 2.5 : 1} />
+              {isSel && <rect x={x - 2} y={ROW1_Y - 2} width={R1W + 4} height={ROW_H + 4}
+                fill="none" stroke="rgba(255,94,23,0.5)" strokeWidth={3} rx={5} />}
+              <text x={x + R1W/2} y={ROW1_Y + 25} textAnchor="middle" fill={color} fontSize={16} fontWeight="700">{n}</text>
+              {p.area && <text x={x + R1W/2} y={ROW1_Y + 40} textAnchor="middle" fill={color} fontSize={9} opacity={0.9}>{p.area} м²</text>}
+              {p.status === "available" && p.price && <text x={x + R1W/2} y={ROW1_Y + 53} textAnchor="middle" fill={color} fontSize={8}>{fmtP(p.price)}</text>}
+              {p.note && <text x={x + R1W/2} y={ROW1_Y + 66} textAnchor="middle" fill={color} fontSize={7.5} fontWeight="700">{p.note}</text>}
+            </g>
+          );
+        })}
+
+        {/* === РЯД 2 (участки 23-13) === */}
+        {ROW_BOT.map((n, i) => {
+          const p = PLOTS[n];
+          const { bg, color } = PLOT_STATUS_COLORS[p.status];
+          const x = r2x(i);
+          const isSel = active === n;
+          return (
+            <g key={n} onClick={() => setActive(active === n ? null : n)} style={{ cursor: "pointer" }}>
+              <rect x={x} y={ROW2_Y} width={R2W} height={ROW_H} fill={bg} rx={4}
+                stroke={isSel ? "#262216" : "rgba(0,0,0,0.18)"} strokeWidth={isSel ? 2.5 : 1} />
+              {isSel && <rect x={x - 2} y={ROW2_Y - 2} width={R2W + 4} height={ROW_H + 4}
+                fill="none" stroke="rgba(255,94,23,0.5)" strokeWidth={3} rx={5} />}
+              <text x={x + R2W/2} y={ROW2_Y + 25} textAnchor="middle" fill={color} fontSize={16} fontWeight="700">{n}</text>
+              {p.area && <text x={x + R2W/2} y={ROW2_Y + 40} textAnchor="middle" fill={color} fontSize={9} opacity={0.9}>{p.area} м²</text>}
+              {p.status === "available" && p.price && <text x={x + R2W/2} y={ROW2_Y + 53} textAnchor="middle" fill={color} fontSize={8}>{fmtP(p.price)}</text>}
+              {p.note && <text x={x + R2W/2} y={ROW2_Y + 66} textAnchor="middle" fill={color} fontSize={7.5} fontWeight="700">{p.note}</text>}
+            </g>
+          );
+        })}
+      </svg>
 
       <div className="flex flex-wrap gap-5 mt-4 text-xs text-slate-600">
         <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full" style={{ background: "#FF5E17" }} /> В продаже</span>
