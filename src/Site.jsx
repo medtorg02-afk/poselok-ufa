@@ -118,7 +118,7 @@ export default function Site() {
 
 /* ====== ШАПКА ====== */
 function Header() {
-  const primaryCtaHref = safeHref(CONTACTS.whatsapp) || safeHref(CONTACTS.telegram);
+  const maxHref = safeHref(CONTACTS.max) || safeHref(CONTACTS.telegram);
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b border-slate-200" style={{ backgroundColor: "rgba(255,255,255,0.75)" }}>
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -131,10 +131,10 @@ function Header() {
           />
           <span>Застройщик ELSTAD <span className="text-slate-500">| Карповский</span></span>
         </a>
-        {primaryCtaHref && (
+        {maxHref && (
           <div className="flex items-center gap-2">
-            <a href={primaryCtaHref} className="inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm" style={{ backgroundColor: BRAND.orange, color: "#fff" }}>
-              <Phone className="w-4 h-4" /> WhatsApp
+            <a href={maxHref} className="inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm" style={{ backgroundColor: BRAND.orange, color: "#fff" }}>
+              <Phone className="w-4 h-4" /> MAX
             </a>
             <a href={CONTACTS.phoneLink} className="hidden md:inline text-sm font-medium" style={{ color: BRAND.dark }}>
               {CONTACTS.phoneHuman}
@@ -375,13 +375,6 @@ function Partners() {
 
   const PARTNERS = [
     {
-      name: "Paradom",
-      role: "Девелопер проекта",
-      site: "https://paradom.ru",
-      logo: "/assets/logos/paradom.png",
-      desc: "Архитектурная концепция, управление проектом и контроль качества."
-    },
-    {
       name: "Gigaz",
       role: "Инженерные решения",
       site: "https://gigaz.ru",
@@ -389,10 +382,10 @@ function Partners() {
       desc: "Поставки и монтаж инженерных систем под стандарты поселка."
     },
     {
-      name: "Металл Профиль",
+      name: "СК Профиль",
       role: "Кровля и фасады",
-      site: "https://metallprofil.ru",
-      logo: "/assets/logos/metallprofil.png",
+      site: "",
+      logo: "/assets/logos/skprofil.png",
       desc: "Фальцевая кровля, фасадные системы и комплектующие."
     },
     {
@@ -478,7 +471,7 @@ function FAQBlock() {
 
 /* ====== CTA ====== */
 function CallToAction() {
-  const wa = safeHref(CONTACTS.whatsapp);
+  const mx = safeHref(CONTACTS.max);
   const tg = safeHref(CONTACTS.telegram);
   return (
     <section className="text-white" style={{ backgroundColor: BRAND.dark }}>
@@ -488,7 +481,7 @@ function CallToAction() {
           <p className="text-white/80 mt-2">Покажем готовые дома и расскажем об условиях покупки.</p>
         </div>
         <div className="flex gap-2 md:justify-end">
-          {wa && <a href={wa} className="rounded-xl px-5 py-3 text-sm font-semibold hover:opacity-90" style={{ backgroundColor: "#fff", color: BRAND.dark }}>Написать в WhatsApp</a>}
+          {mx && <a href={mx} className="rounded-xl px-5 py-3 text-sm font-semibold hover:opacity-90" style={{ backgroundColor: "#fff", color: BRAND.dark }}>Написать в MAX</a>}
           {tg && <a href={tg} className="rounded-xl border px-5 py-3 text-sm hover:opacity-90" style={{ borderColor: "rgba(255,255,255,0.4)" }}>Связаться в Telegram</a>}
         </div>
       </div>
@@ -542,9 +535,9 @@ function Footer() {
 /* ====== Плавающая WA ====== */
 function FloatingWA() {
   return (
-    <a href={CONTACTS.whatsapp} aria-label="Написать в WhatsApp"
+    <a href={CONTACTS.max} aria-label="Написать в MAX"
       className="fixed right-4 bottom-4 rounded-full shadow-lg p-3 md:p-4"
-      style={{ backgroundColor: "#25D366", color: "#fff", zIndex: 50 }}>
+      style={{ backgroundColor: BRAND.orange, color: "#fff", zIndex: 50 }}>
       <Phone className="w-5 h-5 md:w-6 md:h-6" />
     </a>
   );
@@ -593,3 +586,4 @@ function MediaCTA() {
     </Section>
   );
 }
+
