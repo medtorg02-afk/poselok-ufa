@@ -47,11 +47,11 @@ const HOUSES = [
     features: ["Кирпич","Монолитная плита","Панорамные окна","Второй свет","Сауна по желанию"],
   },
   {
-    id: "H135",
-    title: "Дом 135 м² · 1 этаж · 3 спальни",
-    area: 135, beds: 3, fixedPrice: 12600000, ready: "IV кв. 2025",
-    img: "/assets/houses/135/cover.jpg",
-    gallery: ["/assets/houses/135/01.jpg","/assets/houses/135/02.jpg"],
+    id: "H142",
+    title: "Дом 142 м² · 1 этаж · 3 спальни",
+    area: 142, beds: 3, fixedPrice: 12600000, ready: "IV кв. 2025",
+    img: "/assets/houses/142/cover.jpg",
+    gallery: ["/assets/houses/142/01.jpg","/assets/houses/142/02.jpg"],
     features: ["Фальцевая кровля","Навес 2 авто","Терраса ~60 м²","Мастер-спальня с С/У и гардеробом"],
   },
   {
@@ -342,7 +342,6 @@ function Houses({ items }) {
         ))}
       </div>
       {lb.isOpen && <ImageLightbox images={lb.images} index={lb.index} onClose={lb.close} onPrev={lb.prev} onNext={lb.next} />}
-      <p className="text-sm text-slate-500 mt-4">Фото берём из <code>/assets/houses/…</code>. Планировки PDF отключены.</p>
     </Section>
   );
 }
@@ -450,9 +449,6 @@ function Partners() {
           );
         })}
       </div>
-      <p className="text-xs text-slate-500 mt-3">
-        Логотипы читаются из <code>/assets/logos/</code>: <code>paradom.png</code>, <code>gigaz.png</code>, <code>metallprofil.png</code>, <code>ceresit.png</code>, <code>elstad.png</code>.
-      </p>
     </Section>
   );
 }
@@ -462,7 +458,7 @@ function Partners() {
 function FAQBlock() {
   const FAQ = [
     { q: "Почему ‘Первый посёлок Федерации’?", a: "Это первый масштабный кейс коллективного освоения поселка под эгидой Федерации ИЖС в РБ." },
-    { q: "Сколько стоят дома?", a: "Для 123/135/158,3 м² — 11,9/12,6/13,4 млн ₽. Итог зависит от участка и комплектации." },
+    { q: "Сколько стоят дома?", a: "Для 123/142/158,3 м² — 11,9/12,6/13,4 млн ₽. Итог зависит от участка и комплектации." },
     { q: "Кто участники проекта?", a: "Аккредитованные Федерацией застройщики, поставщики материалов и девелоперская команда." },
     { q: "Как посмотреть дома?", a: "Запишитесь на экскурсию в WhatsApp или Telegram — подберём день и покажем всё вживую." },
   ];
