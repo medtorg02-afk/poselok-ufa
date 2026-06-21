@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+﻿import { useMemo, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   MapPin, Phone, Mail, Building2, Hammer, ShieldCheck,
@@ -674,74 +674,111 @@ function SiteMap() {
   const [active, setActive] = useState(null);
   const ap = active != null ? PLOTS[active] : null;
 
-  // SVG viewport
-  const VW = 900, VH = 400;
-  const L = 90, R = 90;                     // левый/правый блок
-  const ZW = VW - L - R;                    // ширина зоны участков (720px)
-  const ROAD_H = 64;                        // высота дороги сверху
-  const ROW1_Y = ROAD_H + 6, ROW_H = 92;   // ряд 1
-  const INNER_H = 38;                       // внутренняя дорожка
-  const ROW2_Y = ROW1_Y + ROW_H + INNER_H; // ряд 2
+  const VW = 960, VH = 640;
+  const L = 120, R = 100;
+  const ZW = VW - L - R; // 740
 
-  // размеры участков
-  const R1W = (ZW - 11 * 3) / 12;          // ~56px
-  const R2W = (ZW - 10 * 3) / 11;          // ~61px
+  const ROAD_H = 56;
+  const ROW1_Y = 62, ROW1_H = 82;
+  const INNER_H = 32;
+  const ROW2_Y = ROW1_Y + ROW1_H + INNER_H;   // 176
+  const MAIN_RD_Y = ROW2_Y + ROW1_H;           // 258
+  const MAIN_RD_H = 40;
+  const ROW3_Y = MAIN_RD_Y + MAIN_RD_H;        // 298
+  const ROW3_H = 70;
+  const GAP2 = 22;
+  const ROW4_Y = ROW3_Y + ROW3_H + GAP2;       // 390
+  const ROW4_H = 68;
+  const GAP3 = 22;
+  const ROW5_Y = ROW4_Y + ROW4_H + GAP3;       // 480
+  const ROW5_H = 66;
+  const BOTTOM_Y = ROW5_Y + ROW5_H;            // 546
+
+  const R1W = (ZW - 11 * 3) / 12;
+  const R2W = (ZW - 10 * 3) / 11;
+  const R3W = (ZW - 9 * 3) / 10;
+  const R4W = (ZW - 10 * 3) / 11;
+  const R5W = (ZW - 9 * 3) / 10;
   const r1x = (i) => L + i * (R1W + 3);
   const r2x = (i) => L + i * (R2W + 3);
+  const r3x = (i) => L + i * (R3W + 3);
+  const r4x = (i) => L + i * (R4W + 3);
+  const r5x = (i) => L + i * (R5W + 3);
 
   const fmtP = (p) => (p / 1000000).toFixed(1) + "M ₽";
+
+  const GrayPlot = ({ x, y, w, h, n }) => (
+    <g>
+      <rect x={x} y={y} width={w} height={h} fill="#dde5ef" stroke="#b0bfc8" strokeWidth={1} rx={3} />
+      <text x={x + w / 2} y={y + h / 2 + 4} textAnchor="middle" dominantBaseline="middle"
+        fontSize={Math.min(13, w / 4.5)} fill="#8a9db0" fontWeight="500">{n}</text>
+    </g>
+  );
+
+  const LCOL_X = 2, LCOL_W = L - 8;
+  const RCOL_X = L + ZW + 8, RCOL_W = R - 12;
+  const PARK_H = VH - BOTTOM_Y - 10;
+  const SIDE_H = (PARK_H - 3) / 2;
 
   return (
     <Section id="site-map" title="Карта посёлка Карповский">
       <p className="text-slate-600 text-sm mb-4">Нажмите на участок, чтобы увидеть информацию о доме.</p>
 
       <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full rounded-2xl" style={{ display: "block" }}>
-        {/* зелёный фон */}
+        {/* Фон */}
         <rect width={VW} height={VH} fill="#4a7a55" rx={12} />
-
-        {/* деревья сверху */}
         <rect x={0} y={0} width={VW} height={22} fill="#3a6645" rx={12} />
 
-        {/* улица */}
+        {/* Ул. Елизаветы Глинки */}
         <rect x={0} y={22} width={VW} height={ROAD_H - 22} fill="#5a6470" />
-        <text x={VW / 2} y={50} textAnchor="middle" fill="#c8d4e0" fontSize={12} fontWeight="600" letterSpacing="3">УЛ. ЕЛИЗАВЕТЫ ГЛИНКИ</text>
+        <text x={VW / 2} y={46} textAnchor="middle" fill="#c8d4e0" fontSize={12} fontWeight="600" letterSpacing="3">УЛ. ЕЛИЗАВЕТЫ ГЛИНКИ</text>
 
-        {/* фон зоны участков */}
-        <rect x={L} y={ROW1_Y - 2} width={ZW} height={ROW_H * 2 + INNER_H + 4} fill="#d8ccb8" rx={4} />
+        {/* Главная внутренняя дорога */}
+        <rect x={0} y={MAIN_RD_Y} width={VW} height={MAIN_RD_H} fill="#7a7870" />
+        <text x={VW / 2} y={MAIN_RD_Y + MAIN_RD_H / 2 + 4} textAnchor="middle" fill="#c8d4e0" fontSize={9} letterSpacing="2">ВНУТРЕННЯЯ ДОРОГА</text>
 
-        {/* внутренняя дорожка */}
-        <rect x={L} y={ROW1_Y + ROW_H} width={ZW} height={INNER_H} fill="#9a9590" />
+        {/* Дорожки между рядами 3-4 и 4-5 */}
+        <rect x={L} y={ROW3_Y + ROW3_H} width={ZW} height={GAP2} fill="#7a7870" opacity={0.5} />
+        <rect x={L} y={ROW4_Y + ROW4_H} width={ZW} height={GAP3} fill="#7a7870" opacity={0.5} />
 
-        {/* === ЛЕВЫЙ БЛОК === */}
-        <rect x={0} y={ROAD_H} width={L} height={VH - ROAD_H} fill="#3a6645" />
-        {/* Основной въезд */}
-        <rect x={4} y={ROAD_H + 4} width={L - 8} height={52} fill="#c0b090" rx={3} />
-        <text x={L/2} y={ROAD_H + 22} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ОСНОВНОЙ</text>
-        <text x={L/2} y={ROAD_H + 33} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ВЪЕЗД</text>
-        {/* Коммерция */}
-        <rect x={4} y={ROAD_H + 62} width={L - 8} height={54} fill="#d4a84a" rx={3} stroke="#b8902a" strokeWidth={1} />
-        <text x={L/2} y={ROAD_H + 83} textAnchor="middle" fill="#4a3000" fontSize={8.5} fontWeight="700">КОМ-</text>
-        <text x={L/2} y={ROAD_H + 95} textAnchor="middle" fill="#4a3000" fontSize={8.5} fontWeight="700">МЕРЦИЯ</text>
+        {/* Межрядовая дорожка (между ряд 1 и 2) */}
+        <rect x={L} y={ROW1_Y + ROW1_H} width={ZW} height={INNER_H} fill="#9a9590" />
+
+        {/* ЛЕВЫЙ БЛОК */}
+        <rect x={0} y={ROAD_H} width={L - 4} height={VH - ROAD_H} fill="#3a6645" />
+        <rect x={LCOL_X} y={ROAD_H + 4} width={LCOL_W} height={48} fill="#c0b090" rx={3} />
+        <text x={LCOL_X + LCOL_W / 2} y={ROAD_H + 20} textAnchor="middle" fill="#3a2c18" fontSize={8} fontWeight="700">ОСНОВНОЙ</text>
+        <text x={LCOL_X + LCOL_W / 2} y={ROAD_H + 32} textAnchor="middle" fill="#3a2c18" fontSize={8} fontWeight="700">ВЪЕЗД</text>
+        <rect x={LCOL_X} y={ROAD_H + 58} width={LCOL_W} height={50} fill="#d4a84a" rx={3} stroke="#b8902a" strokeWidth={1} />
+        <text x={LCOL_X + LCOL_W / 2} y={ROAD_H + 77} textAnchor="middle" fill="#4a3000" fontSize={8} fontWeight="700">КОМ-</text>
+        <text x={LCOL_X + LCOL_W / 2} y={ROAD_H + 89} textAnchor="middle" fill="#4a3000" fontSize={8} fontWeight="700">МЕРЦИЯ</text>
         {/* Компас */}
-        <circle cx={L/2} cy={ROW2_Y + ROW_H/2} r={24} fill="none" stroke="#78a070" strokeWidth={1.5} />
-        <text x={L/2} y={ROW2_Y + ROW_H/2 - 10} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">С</text>
-        <text x={L/2} y={ROW2_Y + ROW_H/2 + 18} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">Ю</text>
-        <text x={L/2 - 18} y={ROW2_Y + ROW_H/2 + 4} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">З</text>
-        <text x={L/2 + 18} y={ROW2_Y + ROW_H/2 + 4} textAnchor="middle" fill="#a8c898" fontSize={10} fontWeight="700">В</text>
+        <circle cx={LCOL_X + LCOL_W / 2} cy={ROW2_Y + ROW1_H / 2} r={20} fill="none" stroke="#78a070" strokeWidth={1.5} />
+        <text x={LCOL_X + LCOL_W / 2} y={ROW2_Y + ROW1_H / 2 - 8} textAnchor="middle" fill="#a8c898" fontSize={9} fontWeight="700">С</text>
+        <text x={LCOL_X + LCOL_W / 2} y={ROW2_Y + ROW1_H / 2 + 15} textAnchor="middle" fill="#a8c898" fontSize={9} fontWeight="700">Ю</text>
+        {/* Участки 24, 25, 26, 89, 88 слева */}
+        <GrayPlot x={LCOL_X} y={ROW3_Y} w={LCOL_W} h={ROW3_H} n={24} />
+        <GrayPlot x={LCOL_X} y={ROW4_Y} w={LCOL_W} h={ROW4_H} n={25} />
+        <GrayPlot x={LCOL_X} y={ROW5_Y} w={LCOL_W} h={ROW5_H} n={26} />
+        <GrayPlot x={LCOL_X} y={BOTTOM_Y + 4} w={LCOL_W} h={SIDE_H} n={89} />
+        <GrayPlot x={LCOL_X} y={BOTTOM_Y + 4 + SIDE_H + 3} w={LCOL_W} h={SIDE_H} n={88} />
 
-        {/* === ПРАВЫЙ БЛОК === */}
-        <rect x={VW - R} y={ROAD_H} width={R} height={VH - ROAD_H} fill="#3a6645" />
-        {/* Второй въезд */}
-        <rect x={VW - R + 4} y={ROAD_H + 4} width={R - 8} height={42} fill="#c0b090" rx={3} />
-        <text x={VW - R/2} y={ROAD_H + 20} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ВТОРОЙ</text>
-        <text x={VW - R/2} y={ROAD_H + 32} textAnchor="middle" fill="#3a2c18" fontSize={8.5} fontWeight="700">ВЪЕЗД</text>
-        {/* Детский сад */}
-        <rect x={VW - R + 4} y={ROAD_H + 54} width={R - 8} height={66} fill="#e8dbc0" rx={3} stroke="#c4a878" strokeWidth={1} />
-        <text x={VW - R/2} y={ROAD_H + 74} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">ДЕТ-</text>
-        <text x={VW - R/2} y={ROAD_H + 85} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">СКИЙ</text>
-        <text x={VW - R/2} y={ROAD_H + 96} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">САД</text>
+        {/* ПРАВЫЙ БЛОК */}
+        <rect x={L + ZW + 4} y={ROAD_H} width={R - 4} height={VH - ROAD_H} fill="#3a6645" />
+        <rect x={RCOL_X} y={ROAD_H + 4} width={RCOL_W} height={40} fill="#c0b090" rx={3} />
+        <text x={RCOL_X + RCOL_W / 2} y={ROAD_H + 17} textAnchor="middle" fill="#3a2c18" fontSize={8} fontWeight="700">ВТОРОЙ</text>
+        <text x={RCOL_X + RCOL_W / 2} y={ROAD_H + 29} textAnchor="middle" fill="#3a2c18" fontSize={8} fontWeight="700">ВЪЕЗД</text>
+        <rect x={RCOL_X} y={ROAD_H + 52} width={RCOL_W} height={68} fill="#e8dbc0" rx={3} stroke="#c4a878" strokeWidth={1} />
+        <text x={RCOL_X + RCOL_W / 2} y={ROAD_H + 72} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">ДЕТ.</text>
+        <text x={RCOL_X + RCOL_W / 2} y={ROAD_H + 84} textAnchor="middle" fill="#4a3820" fontSize={8} fontWeight="700">САД</text>
+        {/* Участки 37-41 справа */}
+        <GrayPlot x={RCOL_X} y={ROW3_Y} w={RCOL_W} h={ROW3_H} n={37} />
+        <GrayPlot x={RCOL_X} y={ROW4_Y} w={RCOL_W} h={ROW4_H} n={38} />
+        <GrayPlot x={RCOL_X} y={ROW5_Y} w={RCOL_W} h={ROW5_H} n={39} />
+        <GrayPlot x={RCOL_X} y={BOTTOM_Y + 4} w={RCOL_W} h={SIDE_H} n={40} />
+        <GrayPlot x={RCOL_X} y={BOTTOM_Y + 4 + SIDE_H + 3} w={RCOL_W} h={SIDE_H} n={41} />
 
-        {/* === РЯД 1 (участки 1-12) === */}
+        {/* РЯД 1 (участки 1-12) */}
         {ROW_TOP.map((n, i) => {
           const p = PLOTS[n];
           const { bg, color } = PLOT_STATUS_COLORS[p.status];
@@ -749,19 +786,19 @@ function SiteMap() {
           const isSel = active === n;
           return (
             <g key={n} onClick={() => setActive(active === n ? null : n)} style={{ cursor: "pointer" }}>
-              <rect x={x} y={ROW1_Y} width={R1W} height={ROW_H} fill={bg} rx={4}
+              <rect x={x} y={ROW1_Y} width={R1W} height={ROW1_H} fill={bg} rx={4}
                 stroke={isSel ? "#262216" : "rgba(0,0,0,0.18)"} strokeWidth={isSel ? 2.5 : 1} />
-              {isSel && <rect x={x - 2} y={ROW1_Y - 2} width={R1W + 4} height={ROW_H + 4}
+              {isSel && <rect x={x - 2} y={ROW1_Y - 2} width={R1W + 4} height={ROW1_H + 4}
                 fill="none" stroke="rgba(255,94,23,0.5)" strokeWidth={3} rx={5} />}
-              <text x={x + R1W/2} y={ROW1_Y + 25} textAnchor="middle" fill={color} fontSize={16} fontWeight="700">{n}</text>
-              {p.area && <text x={x + R1W/2} y={ROW1_Y + 40} textAnchor="middle" fill={color} fontSize={9} opacity={0.9}>{p.area} м²</text>}
-              {p.status === "available" && p.price && <text x={x + R1W/2} y={ROW1_Y + 53} textAnchor="middle" fill={color} fontSize={8}>{fmtP(p.price)}</text>}
-              {p.note && <text x={x + R1W/2} y={ROW1_Y + 66} textAnchor="middle" fill={color} fontSize={7.5} fontWeight="700">{p.note}</text>}
+              <text x={x + R1W / 2} y={ROW1_Y + 22} textAnchor="middle" fill={color} fontSize={15} fontWeight="700">{n}</text>
+              {p.area && <text x={x + R1W / 2} y={ROW1_Y + 37} textAnchor="middle" fill={color} fontSize={8.5} opacity={0.9}>{p.area} м²</text>}
+              {p.status === "available" && p.price && <text x={x + R1W / 2} y={ROW1_Y + 50} textAnchor="middle" fill={color} fontSize={7.5}>{fmtP(p.price)}</text>}
+              {p.note && <text x={x + R1W / 2} y={ROW1_Y + 63} textAnchor="middle" fill={color} fontSize={7} fontWeight="700">{p.note}</text>}
             </g>
           );
         })}
 
-        {/* === РЯД 2 (участки 23-13) === */}
+        {/* РЯД 2 (участки 23-13) */}
         {ROW_BOT.map((n, i) => {
           const p = PLOTS[n];
           const { bg, color } = PLOT_STATUS_COLORS[p.status];
@@ -769,17 +806,36 @@ function SiteMap() {
           const isSel = active === n;
           return (
             <g key={n} onClick={() => setActive(active === n ? null : n)} style={{ cursor: "pointer" }}>
-              <rect x={x} y={ROW2_Y} width={R2W} height={ROW_H} fill={bg} rx={4}
+              <rect x={x} y={ROW2_Y} width={R2W} height={ROW1_H} fill={bg} rx={4}
                 stroke={isSel ? "#262216" : "rgba(0,0,0,0.18)"} strokeWidth={isSel ? 2.5 : 1} />
-              {isSel && <rect x={x - 2} y={ROW2_Y - 2} width={R2W + 4} height={ROW_H + 4}
+              {isSel && <rect x={x - 2} y={ROW2_Y - 2} width={R2W + 4} height={ROW1_H + 4}
                 fill="none" stroke="rgba(255,94,23,0.5)" strokeWidth={3} rx={5} />}
-              <text x={x + R2W/2} y={ROW2_Y + 25} textAnchor="middle" fill={color} fontSize={16} fontWeight="700">{n}</text>
-              {p.area && <text x={x + R2W/2} y={ROW2_Y + 40} textAnchor="middle" fill={color} fontSize={9} opacity={0.9}>{p.area} м²</text>}
-              {p.status === "available" && p.price && <text x={x + R2W/2} y={ROW2_Y + 53} textAnchor="middle" fill={color} fontSize={8}>{fmtP(p.price)}</text>}
-              {p.note && <text x={x + R2W/2} y={ROW2_Y + 66} textAnchor="middle" fill={color} fontSize={7.5} fontWeight="700">{p.note}</text>}
+              <text x={x + R2W / 2} y={ROW2_Y + 22} textAnchor="middle" fill={color} fontSize={15} fontWeight="700">{n}</text>
+              {p.area && <text x={x + R2W / 2} y={ROW2_Y + 37} textAnchor="middle" fill={color} fontSize={8.5} opacity={0.9}>{p.area} м²</text>}
+              {p.status === "available" && p.price && <text x={x + R2W / 2} y={ROW2_Y + 53} textAnchor="middle" fill={color} fontSize={7.5}>{fmtP(p.price)}</text>}
+              {p.note && <text x={x + R2W / 2} y={ROW2_Y + 66} textAnchor="middle" fill={color} fontSize={7} fontWeight="700">{p.note}</text>}
             </g>
           );
         })}
+
+        {/* РЯД 3: участки 27-36 */}
+        {[27,28,29,30,31,32,33,34,35,36].map((n, i) => (
+          <GrayPlot key={n} x={r3x(i)} y={ROW3_Y} w={R3W} h={ROW3_H} n={n} />
+        ))}
+
+        {/* РЯД 4: участки 47-57 */}
+        {[47,48,49,50,51,52,53,54,55,56,57].map((n, i) => (
+          <GrayPlot key={n} x={r4x(i)} y={ROW4_Y} w={R4W} h={ROW4_H} n={n} />
+        ))}
+
+        {/* РЯД 5: участки 59-68 */}
+        {[59,60,61,62,63,64,65,66,67,68].map((n, i) => (
+          <GrayPlot key={n} x={r5x(i)} y={ROW5_Y} w={R5W} h={ROW5_H} n={n} />
+        ))}
+
+        {/* Парк / площадка */}
+        <rect x={L} y={BOTTOM_Y + 4} width={ZW} height={PARK_H} fill="#2d5c38" rx={4} />
+        <text x={L + ZW / 2} y={BOTTOM_Y + PARK_H / 2 + 8} textAnchor="middle" fill="#a8c898" fontSize={13} fontWeight="600">ПАРК / ПЛОЩАДКА</text>
       </svg>
 
       <div className="flex flex-wrap gap-5 mt-4 text-xs text-slate-600">
