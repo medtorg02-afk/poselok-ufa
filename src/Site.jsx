@@ -670,29 +670,29 @@ const PLOT_STATUS_COLORS = {
   other:     { bg: "#f1f5f9", color: "#94a3b8" },
 };
 
+function PlotBox({ n, active, setActive }) {
+  const p = PLOTS[n];
+  const { bg, color } = PLOT_STATUS_COLORS[p.status];
+  const isSel = active === n;
+  return (
+    <button
+      onClick={() => setActive(active === n ? null : n)}
+      className="rounded-lg flex flex-col items-center justify-center transition-transform hover:scale-105 shrink-0"
+      style={{
+        backgroundColor: bg, color, width: 56, height: 66,
+        border: isSel ? "3px solid #262216" : "2px solid rgba(0,0,0,0.1)",
+        boxShadow: isSel ? "0 0 0 3px rgba(255,94,23,0.35)" : "0 1px 3px rgba(0,0,0,0.1)",
+      }}
+    >
+      <span style={{ fontWeight: 700, fontSize: 15 }}>{n}</span>
+      {p.area && <span style={{ fontSize: 9, opacity: 0.9 }}>{p.area} м²</span>}
+      {p.note && <span style={{ fontSize: 8, fontWeight: 700, lineHeight: 1.1 }}>{p.note}</span>}
+    </button>
+  );
+}
+
 function SiteMap() {
   const [active, setActive] = useState(null);
-
-  function PlotBox({ n }) {
-    const p = PLOTS[n];
-    const { bg, color } = PLOT_STATUS_COLORS[p.status];
-    const isSel = active === n;
-    return (
-      <button
-        onClick={() => setActive(active === n ? null : n)}
-        className="rounded-lg flex flex-col items-center justify-center transition-transform hover:scale-105 shrink-0"
-        style={{
-          backgroundColor: bg, color, width: 56, height: 66,
-          border: isSel ? "3px solid #262216" : "2px solid rgba(0,0,0,0.1)",
-          boxShadow: isSel ? "0 0 0 3px rgba(255,94,23,0.35)" : "0 1px 3px rgba(0,0,0,0.1)",
-        }}
-      >
-        <span style={{ fontWeight: 700, fontSize: 15 }}>{n}</span>
-        {p.area && <span style={{ fontSize: 9, opacity: 0.9 }}>{p.area} м²</span>}
-        {p.note && <span style={{ fontSize: 8, fontWeight: 700, lineHeight: 1.1 }}>{p.note}</span>}
-      </button>
-    );
-  }
 
   const ap = active != null ? PLOTS[active] : null;
   return (
@@ -702,7 +702,7 @@ function SiteMap() {
         <div style={{ minWidth: 740 }}>
           <div className="flex gap-1.5 items-end">
             <div className="text-xs text-slate-400 w-16 shrink-0 text-right pr-2 leading-tight">1–12</div>
-            {ROW_TOP.map(n => <PlotBox key={n} n={n} />)}
+            {ROW_TOP.map(n => <PlotBox key={n} n={n} active={active} setActive={setActive} />)}
           </div>
           <div className="flex items-center gap-1.5 my-2">
             <div className="w-16 shrink-0" />
@@ -710,7 +710,7 @@ function SiteMap() {
           </div>
           <div className="flex gap-1.5 items-start">
             <div className="text-xs text-slate-400 w-16 shrink-0 text-right pr-2 leading-tight">23–13</div>
-            {ROW_BOT.map(n => <PlotBox key={n} n={n} />)}
+            {ROW_BOT.map(n => <PlotBox key={n} n={n} active={active} setActive={setActive} />)}
           </div>
         </div>
       </div>
