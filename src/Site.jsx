@@ -1,4 +1,4 @@
-﻿import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   MapPin, Phone, Mail, Building2, Hammer, ShieldCheck,
@@ -670,56 +670,97 @@ const PLOT_STATUS_COLORS = {
   other:     { bg: "#f1f5f9", color: "#94a3b8" },
 };
 
-function PlotBox({ n, active, setActive }) {
+// позиции маркеров в % от ширины/высоты генплана
+const PLOT_POSITIONS = {
+  1:  { x: 9.3,  y: 26 },
+  2:  { x: 12.0, y: 26 },
+  3:  { x: 14.7, y: 26 },
+  4:  { x: 17.4, y: 26 },
+  5:  { x: 20.1, y: 26 },
+  6:  { x: 22.8, y: 26 },
+  7:  { x: 25.5, y: 26 },
+  8:  { x: 28.2, y: 26 },
+  9:  { x: 30.9, y: 26 },
+  10: { x: 33.6, y: 26 },
+  11: { x: 36.3, y: 26 },
+  12: { x: 39.0, y: 26 },
+  23: { x: 9.3,  y: 53 },
+  22: { x: 12.3, y: 53 },
+  21: { x: 15.3, y: 53 },
+  20: { x: 18.3, y: 53 },
+  19: { x: 21.3, y: 53 },
+  18: { x: 24.3, y: 53 },
+  17: { x: 27.3, y: 53 },
+  16: { x: 30.3, y: 53 },
+  15: { x: 33.3, y: 53 },
+  14: { x: 36.3, y: 53 },
+  13: { x: 39.3, y: 53 },
+};
+
+function PlotMarker({ n, active, setActive }) {
   const p = PLOTS[n];
+  const pos = PLOT_POSITIONS[n];
+  if (!pos) return null;
   const { bg, color } = PLOT_STATUS_COLORS[p.status];
   const isSel = active === n;
   return (
     <button
       onClick={() => setActive(active === n ? null : n)}
-      className="rounded-lg flex flex-col items-center justify-center transition-transform hover:scale-105 shrink-0"
+      title={`Участок ${n}`}
       style={{
-        backgroundColor: bg, color, width: 56, height: 66,
-        border: isSel ? "3px solid #262216" : "2px solid rgba(0,0,0,0.1)",
-        boxShadow: isSel ? "0 0 0 3px rgba(255,94,23,0.35)" : "0 1px 3px rgba(0,0,0,0.1)",
+        position: "absolute",
+        left: `${pos.x}%`,
+        top: `${pos.y}%`,
+        transform: `translate(-50%, -50%) scale(${isSel ? 1.25 : 1})`,
+        width: 26,
+        height: 26,
+        borderRadius: "50%",
+        backgroundColor: bg,
+        color,
+        border: isSel ? "2.5px solid #262216" : "2px solid rgba(255,255,255,0.85)",
+        boxShadow: isSel ? "0 0 0 3px rgba(255,94,23,0.45)" : "0 2px 6px rgba(0,0,0,0.35)",
+        fontWeight: 700,
+        fontSize: 10,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        zIndex: 10,
+        transition: "transform 0.15s, box-shadow 0.15s",
+        lineHeight: 1,
       }}
     >
-      <span style={{ fontWeight: 700, fontSize: 15 }}>{n}</span>
-      {p.area && <span style={{ fontSize: 9, opacity: 0.9 }}>{p.area} м²</span>}
-      {p.note && <span style={{ fontSize: 8, fontWeight: 700, lineHeight: 1.1 }}>{p.note}</span>}
+      {n}
     </button>
   );
 }
 
 function SiteMap() {
   const [active, setActive] = useState(null);
-
   const ap = active != null ? PLOTS[active] : null;
+  const ALL_PLOTS = [...ROW_TOP, ...ROW_BOT];
+
   return (
     <Section id="site-map" title="Карта посёлка Карповский">
-      <p className="text-slate-600 text-sm mb-5">Нажмите на участок, чтобы увидеть информацию о доме.</p>
-      <div className="overflow-x-auto pb-2">
-        <div style={{ minWidth: 740 }}>
-          <div className="flex gap-1.5 items-end">
-            <div className="text-xs text-slate-400 w-16 shrink-0 text-right pr-2 leading-tight">1–12</div>
-            {ROW_TOP.map(n => <PlotBox key={n} n={n} active={active} setActive={setActive} />)}
-          </div>
-          <div className="flex items-center gap-1.5 my-2">
-            <div className="w-16 shrink-0" />
-            <div className="flex-1 text-center text-xs font-semibold py-1.5 rounded tracking-widest" style={{ background: "#cbd5e1", color: "#475569" }}>— УЛИЦА —</div>
-          </div>
-          <div className="flex gap-1.5 items-start">
-            <div className="text-xs text-slate-400 w-16 shrink-0 text-right pr-2 leading-tight">23–13</div>
-            {ROW_BOT.map(n => <PlotBox key={n} n={n} active={active} setActive={setActive} />)}
-          </div>
-        </div>
+      <p className="text-slate-600 text-sm mb-4">Нажмите на участок, чтобы увидеть информацию о доме.</p>
+      <div className="relative w-full rounded-xl overflow-hidden" style={{ aspectRatio: "16/9" }}>
+        <img
+          src="/assets/map/genplan.jpg"
+          alt="Генплан КП Карповский"
+          className="w-full h-full object-cover"
+          loading="lazy"
+          draggable={false}
+        />
+        {ALL_PLOTS.map(n => (
+          <PlotMarker key={n} n={n} active={active} setActive={setActive} />
+        ))}
       </div>
 
       <div className="flex flex-wrap gap-5 mt-4 text-xs text-slate-600">
-        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded" style={{ background: "#FF5E17" }} /> В продаже</span>
-        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-400" /> Продан</span>
-        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-amber-100 border border-amber-300" /> Уточняется</span>
-        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-slate-100 border border-slate-300" /> Не в продаже</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full" style={{ background: "#FF5E17" }} /> В продаже</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-gray-400" /> Продан</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-amber-100 border border-amber-300" /> Уточняется</span>
+        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-slate-100 border border-slate-300" /> Не в продаже</span>
       </div>
 
       {active != null && ap && (
