@@ -65,7 +65,7 @@ const HOUSES = [
 ];
 
 const STATS = [
-  { label: "Домов уже построено", value: "15+" },
+  { label: "Домов уже построено", value: "27+" },
   { label: "Участников Федерации", value: "30+" },
   { label: "Архитектурный стиль", value: "Единый" },
   { label: "Прозрачность", value: "Аккредитация" },
@@ -129,7 +129,7 @@ function Header() {
             className="h-7 w-auto object-contain"
             onError={(e)=>{ e.currentTarget.style.display='none'; }}
           />
-          <span>Первый посёлок Федерации <span className="text-slate-500">| Карповский</span></span>
+          <span>Застройщик ELSTAD <span className="text-slate-500">| Карповский</span></span>
         </a>
         {primaryCtaHref && (
           <div className="flex items-center gap-2">
@@ -160,7 +160,7 @@ function Hero() {
       <div className="max-w-7xl mx-auto px-4 py-20 md:py-28">
         <motion.h1 initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.6}}
           className="text-4xl md:text-6xl font-extrabold tracking-tight" style={{ color: BRAND.dark }}>
-          Коттеджный посёлок Карповский — Первый посёлок Федерации
+          Коттеджный посёлок Карповский — Застройщик ELSTAD
         </motion.h1>
         <p className="mt-4 max-w-2xl text-lg md:text-xl text-slate-700">
           Дома бизнес-класса в Уфе: единый архитектурный стиль, газ, охрана, благоустройство.
@@ -457,7 +457,7 @@ function Partners() {
 /* ====== FAQ ====== */
 function FAQBlock() {
   const FAQ = [
-    { q: "Почему ‘Первый посёлок Федерации’?", a: "Это первый масштабный кейс коллективного освоения поселка под эгидой Федерации ИЖС в РБ." },
+    { q: "Почему ‘Застройщик ELSTAD’?", a: "Это первый масштабный кейс коллективного освоения поселка под эгидой Федерации ИЖС в РБ." },
     { q: "Сколько стоят дома?", a: "Для 123/142/158,3 м² — 11,9/12,6/13,4 млн ₽. Итог зависит от участка и комплектации." },
     { q: "Кто участники проекта?", a: "Аккредитованные Федерацией застройщики, поставщики материалов и девелоперская команда." },
     { q: "Как посмотреть дома?", a: "Запишитесь на экскурсию в WhatsApp или Telegram — подберём день и покажем всё вживую." },
@@ -504,7 +504,7 @@ function Footer() {
     <footer className="border-t border-slate-200 bg-white">
       <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-6">
         <div>
-          <div className="font-bold" style={{ color: BRAND.dark }}>Первый посёлок Федерации | Карповский</div>
+          <div className="font-bold" style={{ color: BRAND.dark }}>Застройщик ELSTAD | Карповский</div>
           <p className="text-sm text-slate-600 mt-2">Федерация ИЖС Республики Башкортостан</p>
           <div className="mt-4 flex items-center gap-2 text-slate-700"><MapPin className="w-4 h-4" /> Уфа · Карповский</div>
           {phone && <div className="mt-2 flex items-center gap-2 text-slate-700"><Phone className="w-4 h-4" /> <a href={CONTACTS.phoneLink} className="hover:underline">{CONTACTS.phoneHuman}</a></div>}
