@@ -703,13 +703,13 @@ function ReadyHouses() {
       </div>
       {lb.isOpen && <ImageLightbox images={lb.images} index={lb.index} onClose={lb.close} onPrev={lb.prev} onNext={lb.next} />}
       {videoPlot && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={() => setVideoPlot(null)}>
           <div className="relative w-full max-w-3xl" onClick={e => e.stopPropagation()}>
             <button onClick={() => setVideoPlot(null)}
               className="absolute -top-10 right-0 text-white text-3xl leading-none">×</button>
-            <iframe src={videoPlot.video} className="w-full rounded-xl"
-              style={{aspectRatio:"16/9"}} allow="autoplay" allowFullScreen />
+            <video src={videoPlot.video} controls autoPlay
+              className="w-full rounded-xl" style={{aspectRatio:"16/9"}} />
           </div>
         </div>
       )}
