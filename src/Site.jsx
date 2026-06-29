@@ -118,17 +118,17 @@ export default function Site() {
     <div className="min-h-screen" style={{ background: `linear-gradient(180deg, #fff 0%, ${BRAND.lightBg} 100%)`, color: BRAND.dark }}>
       <Header />
       <Hero />
-      <StatsBlock />
+      <ReadyHouses />
+      <SiteMap />
+      <Houses items={houses} />
       <AboutSettlementGallery />
       <HowToGet />
       <FeaturesBlock />
-      <Houses items={houses} />
-      <ReadyHouses />
-      <SiteMap />
       <HowItWorks />
       <Partners />
       <MediaCTA />
       <FAQBlock />
+      <StatsBlock />
       <SeoText />
       <CallToAction />
       <Footer />
@@ -173,9 +173,9 @@ function Hero() {
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <img
-          src="/assets/seo/og.jpg"
+          src="/assets/plots/2/ext_02.jpg"
           alt="Посёлок Карповский — коттеджный посёлок бизнес-класса в Уфе"
-          className="w-full h-full object-cover opacity-30"
+          className="w-full h-full object-cover opacity-40"
         />
       </div>
       <div className="max-w-7xl mx-auto px-4 py-20 md:py-28">
