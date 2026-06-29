@@ -171,15 +171,13 @@ function Header() {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <img
-          src="/assets/plots/2/ext_02.jpg"
-          alt="Посёлок Карповский — коттеджный посёлок бизнес-класса в Уфе"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-white/60" />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 py-20 md:py-28">
+      <img
+        src="/assets/plots/2/ext_02.jpg"
+        alt="Посёлок Карповский — коттеджный посёлок бизнес-класса в Уфе"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-white/65" />
+      <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-28">
         <motion.h1 initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.6}}
           className="text-4xl md:text-6xl font-extrabold tracking-tight" style={{ color: BRAND.dark }}>
           Коттеджный посёлок Карповский — Застройщик ELSTAD
