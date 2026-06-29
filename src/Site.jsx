@@ -123,6 +123,7 @@ export default function Site() {
       <HowToGet />
       <FeaturesBlock />
       <Houses items={houses} />
+      <ReadyHouses />
       <SiteMap />
       <HowItWorks />
       <Partners />
@@ -631,6 +632,87 @@ function MediaCTA() {
           </div>
         </div>
       </div>
+    </Section>
+  );
+}
+
+/* ====== ГОТОВЫЕ ДОМА (из Google Sheets) ====== */
+function ReadyHouses() {
+  const [plots, setPlots] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [videoPlot, setVideoPlot] = useState(null);
+  const lb = useLightbox();
+
+  useEffect(() => {
+    fetch("/plots.json")
+      .then(r => r.json())
+      .then(data => {
+        setPlots(data.filter(p => p.photos && p.photos.length > 0 && p.status === "в наличии"));
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading || !plots.length) return null;
+
+  return (
+    <Section id="ready-houses" title="Готовые дома — смотреть вживую">
+      <p className="text-slate-600 text-sm -mt-4 mb-6">Реальные фото и видео каждого дома. Нажмите на участок чтобы посмотреть.</p>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {plots.map(p => {
+          const price = p.price ? parseInt(p.price).toLocaleString("ru-RU") + " ₽" : null;
+          return (
+            <div key={p.num} className="rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm flex flex-col">
+              <button className="relative overflow-hidden" style={{aspectRatio:"16/10"}}
+                onClick={() => lb.open(p.photos, 0)}>
+                <img src={p.photos[0]} alt={`Участок №${p.num} — готовый дом в КП Карповский`}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                <span className="absolute top-2 left-2 text-xs font-bold px-3 py-1 rounded-full text-white"
+                  style={{backgroundColor: BRAND.dark}}>Участок №{p.num} · {p.area} м²</span>
+                <span className="absolute bottom-2 right-2 bg-white/80 text-slate-600 text-xs px-2 py-1 rounded-full">
+                  {p.photos.length} фото
+                </span>
+              </button>
+              <div className="p-4 flex-1 flex flex-col gap-2">
+                {price && <div className="text-xl font-bold" style={{color: BRAND.dark}}>{price}</div>}
+                {p.condition && <div className="text-sm font-semibold text-emerald-600">{p.condition}</div>}
+                {p.finish && <div className="text-xs text-slate-500">{p.finish}</div>}
+                <div className="flex gap-2 mt-auto pt-3">
+                  <button onClick={() => lb.open(p.photos, 0)}
+                    className="flex-1 py-2 rounded-xl text-sm border border-slate-200 hover:bg-slate-50 font-medium"
+                    style={{color: BRAND.dark}}>
+                    Фото
+                  </button>
+                  {p.video && (
+                    <button onClick={() => setVideoPlot(p)}
+                      className="flex-1 py-2 rounded-xl text-sm font-semibold text-white"
+                      style={{backgroundColor: BRAND.orange}}>
+                      ▶ Видео
+                    </button>
+                  )}
+                  <a href={CONTACTS.max}
+                    className="flex-1 py-2 rounded-xl text-sm font-semibold text-white text-center"
+                    style={{backgroundColor: BRAND.dark}}>
+                    Узнать
+                  </a>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {lb.isOpen && <ImageLightbox images={lb.images} index={lb.index} onClose={lb.close} onPrev={lb.prev} onNext={lb.next} />}
+      {videoPlot && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setVideoPlot(null)}>
+          <div className="relative w-full max-w-3xl" onClick={e => e.stopPropagation()}>
+            <button onClick={() => setVideoPlot(null)}
+              className="absolute -top-10 right-0 text-white text-3xl leading-none">×</button>
+            <iframe src={videoPlot.video} className="w-full rounded-xl"
+              style={{aspectRatio:"16/9"}} allow="autoplay" allowFullScreen />
+          </div>
+        </div>
+      )}
     </Section>
   );
 }
