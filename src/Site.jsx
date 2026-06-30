@@ -729,7 +729,7 @@ function ReadyHouses() {
               <div>
                 <div className="font-bold text-lg" style={{color: BRAND.dark}}>Участок №{descPlot.num} · {descPlot.area} м²</div>
                 {descPlot.price && <div className="text-base font-semibold mt-0.5" style={{color: BRAND.orange}}>
-                  {parseInt(descPlot.price).toLocaleString("ru-RU")} ₽
+                  {Math.round(parseFloat(descPlot.price.replace(/[\s ]+/g,"").replace(",","."))).toLocaleString("ru-RU")} ₽
                 </div>}
               </div>
               <button onClick={() => setDescPlot(null)} className="text-slate-400 hover:text-slate-600 text-2xl leading-none">×</button>
