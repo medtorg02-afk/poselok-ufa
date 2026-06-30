@@ -640,6 +640,7 @@ function ReadyHouses() {
   const [plots, setPlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [videoPlot, setVideoPlot] = useState(null);
+  const [descPlot, setDescPlot] = useState(null);
   const lb = useLightbox();
 
   useEffect(() => {
@@ -676,21 +677,28 @@ function ReadyHouses() {
                 {price && <div className="text-xl font-bold" style={{color: BRAND.dark}}>{price}</div>}
                 {p.condition && <div className="text-sm font-semibold text-emerald-600">{p.condition}</div>}
                 {p.finish && <div className="text-xs text-slate-500">{p.finish}</div>}
-                <div className="flex gap-2 mt-auto pt-3">
+                <div className="grid grid-cols-2 gap-2 mt-auto pt-3">
                   <button onClick={() => lb.open(p.photos, 0)}
-                    className="flex-1 py-2 rounded-xl text-sm border border-slate-200 hover:bg-slate-50 font-medium"
+                    className="py-2 rounded-xl text-sm border border-slate-200 hover:bg-slate-50 font-medium"
                     style={{color: BRAND.dark}}>
                     Фото
                   </button>
-                  {p.video && (
+                  {p.video ? (
                     <button onClick={() => setVideoPlot(p)}
-                      className="flex-1 py-2 rounded-xl text-sm font-semibold text-white"
+                      className="py-2 rounded-xl text-sm font-semibold text-white"
                       style={{backgroundColor: BRAND.orange}}>
                       ▶ Видео
                     </button>
+                  ) : <div />}
+                  {(p.desc || p.infra || p.mortgage) && (
+                    <button onClick={() => setDescPlot(p)}
+                      className="py-2 rounded-xl text-sm border border-slate-200 hover:bg-slate-50 font-medium"
+                      style={{color: BRAND.dark}}>
+                      Описание
+                    </button>
                   )}
                   <a href={CONTACTS.max}
-                    className="flex-1 py-2 rounded-xl text-sm font-semibold text-white text-center"
+                    className="py-2 rounded-xl text-sm font-semibold text-white text-center"
                     style={{backgroundColor: BRAND.dark}}>
                     Узнать
                   </a>
@@ -709,6 +717,48 @@ function ReadyHouses() {
               className="absolute -top-10 right-0 text-white text-3xl leading-none">×</button>
             <video src={videoPlot.video} controls autoPlay
               className="w-full rounded-xl" style={{aspectRatio:"16/9"}} />
+          </div>
+        </div>
+      )}
+      {descPlot && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
+          onClick={() => setDescPlot(null)}>
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()}>
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <div className="font-bold text-lg" style={{color: BRAND.dark}}>Участок №{descPlot.num} · {descPlot.area} м²</div>
+                {descPlot.price && <div className="text-base font-semibold mt-0.5" style={{color: BRAND.orange}}>
+                  {parseInt(descPlot.price).toLocaleString("ru-RU")} ₽
+                </div>}
+              </div>
+              <button onClick={() => setDescPlot(null)} className="text-slate-400 hover:text-slate-600 text-2xl leading-none">×</button>
+            </div>
+            <div className="p-5 flex flex-col gap-5">
+              {descPlot.desc && (
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">О доме</div>
+                  <p className="text-sm text-slate-700 leading-relaxed">{descPlot.desc}</p>
+                </div>
+              )}
+              {descPlot.infra && (
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Инфраструктура посёлка</div>
+                  <p className="text-sm text-slate-700 leading-relaxed">{descPlot.infra}</p>
+                </div>
+              )}
+              {descPlot.mortgage && (
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Ипотека и условия</div>
+                  <p className="text-sm text-slate-700 leading-relaxed">{descPlot.mortgage}</p>
+                </div>
+              )}
+              <a href={CONTACTS.max}
+                className="block text-center py-3 rounded-xl font-semibold text-white mt-2"
+                style={{backgroundColor: BRAND.orange}}>
+                Связаться с менеджером
+              </a>
+            </div>
           </div>
         </div>
       )}
