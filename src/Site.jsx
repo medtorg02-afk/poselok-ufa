@@ -660,7 +660,7 @@ function ReadyHouses() {
       <p className="text-slate-600 text-sm -mt-4 mb-6">Реальные фото и видео каждого дома. Нажмите на участок чтобы посмотреть.</p>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {plots.map(p => {
-          const price = p.price ? parseInt(p.price).toLocaleString("ru-RU") + " ₽" : null;
+          const price = p.price ? parseInt(p.price.replace(/[\s ,]+/g, "")).toLocaleString("ru-RU") + " ₽" : null;
           return (
             <div key={p.num} className="rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm flex flex-col">
               <button className="relative overflow-hidden" style={{aspectRatio:"16/10"}}
