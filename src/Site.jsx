@@ -675,7 +675,6 @@ function ReadyHouses() {
               </button>
               <div className="p-4 flex-1 flex flex-col gap-2">
                 {price && <div className="text-xl font-bold" style={{color: BRAND.dark}}>{price}</div>}
-                {p.condition && <div className="text-sm font-semibold text-emerald-600">{p.condition}</div>}
                 {p.finish && <div className="text-xs text-slate-500">{p.finish}</div>}
                 <div className="grid grid-cols-2 gap-2 mt-auto pt-3">
                   <button onClick={() => lb.open(p.photos, 0)}
